@@ -78,7 +78,7 @@ These libraries are stored in the `common` folder, and include:
 
 ##Other code used
 
-Where possible, all code is original. However, due to the complexity of emulating some emulating the Atari system (In
+Where possible, all code is original. However, due to the complexity of emulating some of the Atari system (In
 particular the sound and module playing), other code has been used. As before, this code is stored in the `common` folder.
 
 * `Music.js` - This is a modified version of music playing code by Antoine Santo from his CODEF project. ( http://codef.santo.fr )
