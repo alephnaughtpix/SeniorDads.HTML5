@@ -2,11 +2,11 @@
 
 ##The Senior Dads demos recreated in HTML5 and Javascript.
 
-###Current version: v0.2 (2014-04-08)
+###Current version: v0.3 (2014-04-17)
 
 ##Updates
 
-###v0.2 (2014-04-08)
+###v0.3 (2014-04-17)
 
 * "Anal Tuck" completed.
 * "Colonic Irrigation" 99% complete.
@@ -84,5 +84,5 @@ Where possible, all code is original. However, due to the complexity of emulatin
 particular the sound and module playing), other code has been used. As before, this code is stored in the `common` folder.
 
 * `Music.js` - This is a modified version of music playing code by Antoine Santo from his CODEF project. ( http://codef.santo.fr )
-* `riffwave.js' - Riffwave sample creation code by Pedro Ladaria
+* `riffwave.js` - Riffwave sample creation code by Pedro Ladaria
 
