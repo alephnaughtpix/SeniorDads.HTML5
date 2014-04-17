@@ -7,10 +7,12 @@
 ##Updates
 
 ###v0.3 (2014-04-17)
+* "DadPlazz!" 99% complete.
+
+###v0.2 (2014-04-08)
 
 * "Anal Tuck" completed.
 * "Colonic Irrigation" 99% complete.
-* "DadPlazz!" 99% complete.
 
 
 ---
