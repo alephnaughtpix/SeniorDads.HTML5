@@ -10,6 +10,7 @@
 
 * "Anal Tuck" completed.
 * "Colonic Irrigation" 99% complete.
+* "DadPlazz!" 99% complete.
 
 
 ---
@@ -31,6 +32,7 @@ on the Javascript/HTML5 platform.
 
 * "Anal Tuck".
 * "Colonic Irrigation".
+* "DadPlazz!".
 
 ##Demos still to do
 
@@ -39,7 +41,6 @@ on the Javascript/HTML5 platform.
 * The ST Floormat Demo
 * "Anti-Teckno" Teckno Demo
 * Xmas Card 97
-* Dadplazz!
 * Monomental
 * The Ultimate Fake Demo
 
@@ -61,6 +62,7 @@ you can run the demos by pointing your browser at `http://[webserver root]/Senio
 ... and within these folder are the following folders:
 * `atuck` - "Anal Tuck" demo.
 * `colonic` - "Colonic Irrigation" demo.
+* `dadplazz` - "DadPlazz!" demo.
 * `common` - Common code used by the demos. (See "Technology" below.)
 
 ##Technology
