@@ -24,7 +24,7 @@ SeniorDads.Demos.ColonicIrrigation = function (placeholder, name, callbackOnEnd)
     var ctrl = String.fromCharCode(27);
     var loadedCallback = null;
     var bomber = new SeniorDads.Bomb();
-    var colonicIrrigation = new SeniorDads.Demos.Demo(load, init, endDemo);
+    var colonicIrrigation = new SeniorDads.Demos.Demo(null, load, init, endDemo);
     colonicIrrigation.add( new SeniorDads.Demos.Demo.DemoPart( null, start, startAbort) );
     colonicIrrigation.add( new SeniorDads.Demos.Demo.DemoPart( null, main, endDemo) );
     colonicIrrigation.add( new SeniorDads.Demos.Demo.DemoPart( null, endCredits, endDemo) );
@@ -43,7 +43,7 @@ SeniorDads.Demos.ColonicIrrigation = function (placeholder, name, callbackOnEnd)
         initTextScreen = demoWindow.add("initText", 2);
         font = new SeniorDads.Font.Tos("../common/resources/tosfont.bin");
         music = new SeniorDads.Music("MOD", "resources/theme.bin", true);
-        endGfxBinLoader = new SeniorDads.Loader.LoadBinary("resources/colend.bin", endGfxBin,
+        endGfxBinLoader = new SeniorDads.Loader.Binary("resources/colend.bin", endGfxBin,
             function (buffer) {
                 endGfxBin = buffer;
             }
@@ -88,7 +88,7 @@ SeniorDads.Demos.ColonicIrrigation = function (placeholder, name, callbackOnEnd)
         var pauseTable = new Uint16Array([5, 1, 2, 1, 5, 1, 3, 4, 5, 6, 2, 1, 1, 1, 1, 4, 50, 1]);
         var x = 0;
         var y = 0;
-        var context = initTextScreen.context();
+        var context = initTextScreen.context;
         initTextScreen.Clear(white);
         font.PrintText(initTextScreen, 0, 0,
             '       ' + ctrl + 'pTHE SENIOR DADS are Back!!!!!' + ctrl + 'q\n\n\n' +
@@ -218,7 +218,7 @@ SeniorDads.Demos.ColonicIrrigation = function (placeholder, name, callbackOnEnd)
         var textYstart = 20;
         var from = 0;
         var textY = textYstart;
-        var textContext = water2Screen.context();
+        var textContext = water2Screen.context;
         var currentText;
         var lineLength = 24;
         var fromX = 0;
@@ -232,7 +232,7 @@ SeniorDads.Demos.ColonicIrrigation = function (placeholder, name, callbackOnEnd)
         water2Screen.Clear(black);
         currentDrawScreen = water2Screen;
         font.SetColours([0xff, 0xff, 0xff, 0xff], [0, 0, 0, 0xff]);
-        music.Play();
+        music.play();
         water1Screen.Show();
         mainAnimDelay = setInterval(mainAnim, demoDelay);
 
@@ -281,7 +281,7 @@ SeniorDads.Demos.ColonicIrrigation = function (placeholder, name, callbackOnEnd)
                 }
 
             function drawLine(x1, y1, x2, y2, lineColour) {
-                var context = currentDrawScreen.context();
+                var context = currentDrawScreen.context;
                 context.fillStyle = lineColour;
                 var doneX = false;
                 var doneY = false;
@@ -308,13 +308,13 @@ SeniorDads.Demos.ColonicIrrigation = function (placeholder, name, callbackOnEnd)
         function end() {
             clearInterval(mainAnimDelay);
             demoWindow.FlushWaitVbl();
-            music.Stop();
+            music.stop();
             colonicIrrigation.next();
         }
     }
     
     function mainAbort() {
-        music.Stop();
+        music.stop();
         clearInterval(mainAnimDelay);
         demoWindow.FlushWaitVbl();
     }
@@ -420,15 +420,15 @@ SeniorDads.Demos.ColonicIrrigation = function (placeholder, name, callbackOnEnd)
         var backgroundView = new DataView(endGfxBin);
         water1Screen.Hide();
         water2Screen.Show();
-        water1Screen.context().drawImage(water2Screen.canvas(), 0, 0, 384, 240);
+        water1Screen.context.drawImage(water2Screen.canvas, 0, 0, 384, 240);
         demoWindow.WaitVbl(2, endCreditsScroller);
 			//alert(texts.length);
         //endDemo();
         
         function endCreditsScroller() {
             swapScreens();
-            var sourceContext = displayedScreen.context();
-            var drawContext = currentDrawScreen.context();
+            var sourceContext = displayedScreen.context;
+            var drawContext = currentDrawScreen.context;
             drawContext.putImageData(sourceContext.getImageData(0, 2, 384 * 2, 238 * 2), 0, 0);
             var canvasData = drawContext.createImageData(384, 2);
             var canvasDataPosition = 0;

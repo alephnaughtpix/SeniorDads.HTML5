@@ -1,18 +1,57 @@
 /* SENIOR DADS MUSIC PLAYER! */
-// Most of this code is by Antoine Santo, and is a modified version 
+// Nearly all of this code is by Antoine Santo, and is a modified version 
 // of his code for the CODEF project. See his notes below for more details.
 SeniorDads.CreateNameSpace("SeniorDads.Music");
 
 SeniorDads.Music = function(type, url, stereo) {
-
+	
+	if (stereo === undefined) stereo = true;
     var musicPlayer = new music(type);
     musicPlayer.stereo(stereo);
     musicPlayer.Load(url);
-    this.Load = musicPlayer.Load;
-    this.Play = musicPlayer.Play;
-    this.Stop = musicPlayer.Stop;
-    this.loaded = musicPlayer.loaded;
+    this.load = musicPlayer.Load;
+    this.resource_size = 1;
+    this.play = musicPlayer.Play;
+    this.stop = musicPlayer.Stop;
+//    this.loaded = musicPlayer.loaded;
+//    this.resource_size = function () { return 1; };					// Size of the resource
+//    this.resource_loaded =  function () { return 0; }; 				// The amount already loaded (we get this from the instance of the class we're wrapping.)
     this.stereo = musicPlayer.stereo;
+//    this.pattern_position = function () { return SeniorDads.Music.pattern_position; };
+//    this.track_position = function () { return SeniorDads.Music.track_position; };
+    Object.defineProperties(this, {
+    	pattern_position: { get: function() { return SeniorDads.Music.pattern_position; } }, // Music file track position.
+    	track_position:   { get: function() { return SeniorDads.Music.track_position; } },	 // Music file pattern position.
+    	loaded:           { get: function() { return musicPlayer.loaded; } },				 // Whether the music file has loaded.
+    	resource_size:    { get: function() { return 1; } },								 // Size of the resource.
+    	resource_loaded:  { get: function() { return (loaded) ? 1 : 0; } }					 // The amount already loaded.
+    } );
+};
+
+SeniorDads.Music.IfAtPoint = function(trackPos, patternPos, event) {
+	if ( 
+			(SeniorDads.Music.track_position == SeniorDads.Music.BreakPoint_Track)
+			&&
+			(SeniorDads.Music.pattern_position == SeniorDads.Music.BreakPoint_Pattern)
+	)
+		if (SeniorDads.Music.BreakPoint_Event != null)
+			SeniorDads.Music.BreakPoint_Event();
+};
+
+SeniorDads.Music.SetBreakPoint = function(trackPos, patternPos, event) {
+	SeniorDads.Music.BreakPoint_Pattern = patternPos;
+	SeniorDads.Music.BreakPoint_Track = trackPos;
+	SeniorDads.Music.BreakPoint_Event = event;
+};
+
+SeniorDads.Music.CheckForBreakPoint = function() {
+	if ( 
+			(SeniorDads.Music.track_position == SeniorDads.Music.BreakPoint_Track)
+			&&
+			(SeniorDads.Music.pattern_position == SeniorDads.Music.BreakPoint_Pattern)
+	)
+		if (SeniorDads.Music.BreakPoint_Event != null)
+			SeniorDads.Music.BreakPoint_Event();
 };
 
 /*------------------------------------------------------------------------------
@@ -45,8 +84,14 @@ SeniorDads.Music = function(type, url, stereo) {
     var CODEF_AUDIO_NODE = null;
 
     function music(type) {
+    	//=====================================================================================
+    	var pattern_position = 0;
+    	var track_position = 0;
+        this.pattern_position = function () { return pattern_position; };
+    	//=====================================================================================
         var loaded = false;
         var player;
+        var ymTune;
         window.AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.oAudioContext || window.msAudioContext;
         if (typeof (AudioContext) != 'undefined') {
             switch (type) {
@@ -90,6 +135,45 @@ SeniorDads.Music = function(type, url, stereo) {
                     fetch.send();
                 }
             };
+            this.Load = function (zic) {
+                var __self = this;
+                if (typeof (AudioContext) != 'undefined') {
+                    var fetch = new XMLHttpRequest();
+                    fetch.open('GET', zic);
+                    fetch.overrideMimeType("text/plain; charset=x-user-defined");
+                    fetch.onreadystatechange = function () {
+                        if (this.readyState == 4 && this.status == 200) {
+                            var t = this.responseText || "";
+                            var ff = [];
+                            var mx = t.length;
+                            var scc = String.fromCharCode;
+                            for (var z = 0; z < mx; z++) {
+                                ff[z] = scc(t.charCodeAt(z) & 255);
+                            }
+                            var binString = new dataType();
+                            binString.data = ff.join("");
+                            YmConst_PLAYER_FREQ = CODEF_AUDIO_CONTEXT.sampleRate;
+                            __self.loader.player.stereo = __self.stereo_value;
+                            ymTune = binString;
+                            loaded = true;
+                            //__self.loader.player.load(binString);
+                            player = __self.loader.player;
+                        }
+                    };
+                    fetch.send();
+                }
+            };
+            this.Play = function() {
+            	player.load(ymTune);
+            };
+            this.Stop = function() {
+            	CODEF_AUDIO_NODE.disconnect();
+                CODEF_AUDIO_NODE.onaudioprocess = CODEF_AUDIO_NODE = null;
+            	//CODEF_AUDIO_NODE.source.stop();
+                if (player != null)
+                    player.stop();
+            };
+            this.loaded = function () { return loaded; };
         } else {
             this.LoadAndRun = function (zic) {
                 var __self = this;
@@ -677,10 +761,11 @@ SeniorDads.Music = function(type, url, stereo) {
         };
 
         this.stop = function () {
-
             this.reset();
             return true;
         };
+        
+        this.Stop = this.stop;
 
         this.reset = function () {
             var i;
@@ -10744,6 +10829,9 @@ SeniorDads.Music = function(type, url, stereo) {
                                         this.mixer.complete = 1;
                                     }
                                 }
+                                SeniorDads.Music.pattern_position = this.patternPos;
+                                SeniorDads.Music.track_position = this.trackPos;
+                                SeniorDads.Music.CheckForBreakPoint();
                             }
                         }
                     }
@@ -11153,6 +11241,9 @@ SeniorDads.Music = function(type, url, stereo) {
                                         this.mixer.complete = 1;
                                     }
                                 }
+                                SeniorDads.Music.pattern_position = this.patternPos;
+                                SeniorDads.Music.track_position = this.trackPos;
+                                SeniorDads.Music.CheckForBreakPoint();
                             }
                         }
                     },

@@ -16,7 +16,7 @@ SeniorDads.Demos.DadPlazz = function(placeholder, name, callbackOnEnd) {
         var vblTimer = Math.floor( (Math.random() * 0xffff) + 1);
         var srcScreenPointer = 0;
         var destScreenPointer = srcScreenPointer + (320 * 4);
-        var context = plazzScreen.context();
+        var context = plazzScreen.context;
         var canvasData = context.createImageData(640, 240);
         var dataData = canvasData.data;
         plazzScreen.Show();
@@ -35,7 +35,7 @@ SeniorDads.Demos.DadPlazz = function(placeholder, name, callbackOnEnd) {
 	        	i--;
 	        }
 	        context.putImageData(canvasData, 0, 0);
-            context.drawImage(plazzScreen.canvas(), 0, 0, 320, 480);
+            context.drawImage(plazzScreen.canvas, 0, 0, 320, 480);
 	        vblTimer++;
 	        vblTimer = vblTimer & 0xffff;
 	        demoWindow.WaitVbl(5, plazzBlit);

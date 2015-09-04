@@ -1,0 +1,219 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/**
+<span class='line'>  2</span>  * @fileOverview Senior Dads Loader utilities.
+<span class='line'>  3</span>  * @author The Senior Dads
+<span class='line'>  4</span>  * @version 0.4
+<span class='line'>  5</span>  */</span><span class="WHIT">
+<span class='line'>  6</span> 
+<span class='line'>  7</span> </span><span class="COMM">/**
+<span class='line'>  8</span>  * @namespace SeniorDads.Loader
+<span class='line'>  9</span>  */</span><span class="WHIT">
+<span class='line'> 10</span> </span><span class="WHIT"> </span><span class="NAME">SeniorDads.CreateNameSpace</span><span class="PUNC">(</span><span class="STRN">"SeniorDads.Loader"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 11</span> 
+<span class='line'> 12</span> </span><span class="COMM">/**
+<span class='line'> 13</span>  * &lt;h1>SeniorDads.Loader&lt;/h1>
+<span class='line'> 14</span>  * &lt;p>&lt;strong>HTML5 Demo Resource Loader&lt;/strong>&lt;/p>
+<span class='line'> 15</span>  * &lt;p>&lt;em>loader = new SeniorDads.Loader(resources, loadedCallback, processChangedCallback, checkInterval);&lt;/em>&lt;/p>
+<span class='line'> 16</span>  * &lt;p>Loading resources in HTML5 demos is a real pain in the bum, since they're all loaded 
+<span class='line'> 17</span>  * asynchronously over a network connection. Therefore you need to check, before you use your 
+<span class='line'> 18</span>  * resources, that they've actually been loaded! In addition, there might be some initialisation
+<span class='line'> 19</span>  * procedures to perform on the resources (eg in the case of music files), so it's not &lt;em>really&lt;/em>
+<span class='line'> 20</span>  * loaded until that is done.&lt;/p>&lt;p>Hence this class, which keeps track of the resource wrapper 
+<span class='line'> 21</span>  * classes whilst they load resources. (in this case, this {@link SeniorDads.Font}, {@link SeniorDads.Image}, {@link SeniorDads.Music}, {@link SeniorDads.Music.SoundBox}
+<span class='line'> 22</span>  * and {@link SeniorDads.Loader.Binary} classes.)&lt;/p>
+<span class='line'> 23</span>  * @constructor
+<span class='line'> 24</span>  * @class HTML5 Demo Resource Loader
+<span class='line'> 25</span>  * @param {Object[]} resources An array of instances of resource wrapper classes
+<span class='line'> 26</span>  * @param {function} [loadedCallback] The function to call whenever all resources have been loaded
+<span class='line'> 27</span>  * @param {function} [processChangedCallback] Function to call if we're monitoring change in progress of loading resources
+<span class='line'> 28</span>  * @param {number} [checkInterval=500] How often to check the loading progress in milliseconds
+<span class='line'> 29</span>  * @property {number} count The number of resources to load
+<span class='line'> 30</span>  * @property {number} toLoad The number of resources that have been loaded
+<span class='line'> 31</span>  * @property {number} loaded How many have been loaded
+<span class='line'> 32</span>  * @property {boolean} completed Whether all loading of resources has been completed
+<span class='line'> 33</span>  * @memberOf SeniorDads
+<span class='line'> 34</span>  * @example 
+<span class='line'> 35</span>  *  var progressIndicator = document.getElementById('progressIndicatorPlaceholder');
+<span class='line'> 36</span>  *  
+<span class='line'> 37</span>  * 	var loader = new SeniorDads.Loader(
+<span class='line'> 38</span>  * 		[
+<span class='line'> 39</span>  * 			screen1,
+<span class='line'> 40</span>  * 			music1,
+<span class='line'> 41</span>  * 			font1,
+<span class='line'> 42</span>  * 			screen2,
+<span class='line'> 43</span>  * 			music2,
+<span class='line'> 44</span>  * 			font2,
+<span class='line'> 45</span>  * 			binaryFile
+<span class='line'> 46</span>  * 		],
+<span class='line'> 47</span>  * 		completed,
+<span class='line'> 48</span>  * 		progress,
+<span class='line'> 49</span>  * 		1000
+<span class='line'> 50</span>  *  );
+<span class='line'> 51</span>  *  
+<span class='line'> 52</span>  *  function progress(loaded, toLoad) {
+<span class='line'> 53</span>  *  	progressIndicator.innerHTML = loaded + " loaded, " + toLoad + " to load.";
+<span class='line'> 54</span>  *  }
+<span class='line'> 55</span> 
+<span class='line'> 56</span>  *  function completed() {
+<span class='line'> 57</span>  *  	progressIndicator.innerHTML = "Loading complete.";
+<span class='line'> 58</span>  *  }
+<span class='line'> 59</span>  */</span><span class="WHIT">
+<span class='line'> 60</span> </span><span class="NAME">SeniorDads.Loader</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">resources</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">loadedCallback</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">processChangedCallback</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">checkInterval</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 61</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">loadedCallback</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">loadedCallback</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">	</span><span class="COMM">// If there's no call back (Why!?) we don't need to check progress</span><span class="WHIT">
+<span class='line'> 62</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">processChangedCallback</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">processChangedCallback</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">	</span><span class="COMM">// If there's no call back for a progress check</span><span class="WHIT">
+<span class='line'> 63</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">checkInterval</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">checkInterval</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">500</span><span class="PUNC">;</span><span class="WHIT">		</span><span class="COMM">// Default for optional value</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">loaderCheckInterval</span><span class="PUNC">;</span><span class="WHIT">									</span><span class="COMM">// Set timeout pointer for check</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="WHIT">    </span><span class="COMM">// Get the "count" of resources to load. From that we can get the "size" of each and determine the final total from that.</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">count</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">resources.length</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 67</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">toLoad</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">	</span><span class="WHIT">
+<span class='line'> 68</span> </span><span class="WHIT">    </span><span class="COMM">// Initialise the "size" of resources we need to load</span><span class="WHIT">
+<span class='line'> 69</span> </span><span class="WHIT">    </span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">count</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="PUNC">++</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 70</span> </span><span class="WHIT">        	</span><span class="NAME">toLoad</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">resources</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">resource_size</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 71</span> </span><span class="WHIT">    </span><span class="NAME">count</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">toLoad</span><span class="PUNC">;</span><span class="WHIT">			</span><span class="COMM">// Now set that up as the amount of resources</span><span class="WHIT">
+<span class='line'> 72</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">loaded</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">			</span><span class="COMM">// Assume we haven't loaded anything yet.</span><span class="WHIT">
+<span class='line'> 73</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">completed</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">	</span><span class="COMM">//</span><span class="WHIT">
+<span class='line'> 74</span> 
+<span class='line'> 75</span> </span><span class="WHIT">    </span><span class="COMM">// Set properties</span><span class="WHIT">
+<span class='line'> 76</span> </span><span class="WHIT">    </span><span class="NAME">Object.defineProperties</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 77</span> </span><span class="WHIT">    	</span><span class="NAME">count</span><span class="PUNC">:</span><span class="WHIT">     </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">get</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">count</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">	 </span><span class="COMM">// Amount of resources</span><span class="WHIT">
+<span class='line'> 78</span> </span><span class="WHIT">    	</span><span class="NAME">toLoad</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">get</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">toLoad</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">   </span><span class="COMM">// How many remain to load</span><span class="WHIT">
+<span class='line'> 79</span> </span><span class="WHIT">    	</span><span class="NAME">loaded</span><span class="PUNC">:</span><span class="WHIT">    </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">get</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">loaded</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">   </span><span class="COMM">// How many have been loaded</span><span class="WHIT">
+<span class='line'> 80</span> </span><span class="WHIT">    	</span><span class="NAME">completed</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">get</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">completed</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="COMM">// Whether all loading has been completed</span><span class="WHIT">
+<span class='line'> 81</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 82</span> </span><span class="COMM">//    this.count = function() { return count; };			// Amount of resources</span><span class="WHIT">
+<span class='line'> 83</span> </span><span class="COMM">//    this.toLoad = function() { return toLoad; };		// How many remain to load</span><span class="WHIT">
+<span class='line'> 84</span> </span><span class="COMM">//    this.loaded = function() { return loaded; };		// How many have been loaded</span><span class="WHIT">
+<span class='line'> 85</span> </span><span class="COMM">//    this.completed = function() { return completed; };	// Whether all loading has been completed</span><span class="WHIT">
+<span class='line'> 86</span> 
+<span class='line'> 87</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'> 88</span> </span><span class="WHIT">    </span><span class="COMM">// Set public methods</span><span class="WHIT">
+<span class='line'> 89</span> </span><span class="WHIT">    </span><span class="COMM">/** 
+<span class='line'> 90</span>      * &lt;p>Scan the the the resources, and total up what's loaded, 
+<span class='line'> 91</span>      * and what remains to be loaded.&lt;/p>
+<span class='line'> 92</span>      * 
+<span class='line'> 93</span>      * &lt;p>Each resource wrapper class has three properties to 
+<span class='line'> 94</span>      * allow us to determine loading progress:&lt;/p>
+<span class='line'> 95</span>      * &lt;ul>
+<span class='line'> 96</span>      * &lt;li>loaded - set to true if the resource is loaded.&lt;/li>
+<span class='line'> 97</span>      * &lt;li>resource_size - the amount of elements to "load" in the resource.&lt;/li>
+<span class='line'> 98</span>      * &lt;li>resource_loaded - the amount of elements already loaded.&lt;/li>
+<span class='line'> 99</span>      * &lt;/ul>
+<span class='line'>100</span>      * &lt;p>The last two properties allow us an amount of granularity in monitoring the 
+<span class='line'>101</span>      * loading progress. (eg for progress indicators) For stuff like images, binary 
+<span class='line'>102</span>      * files etc., the resource size can simply be one. However, it can be different
+<span class='line'>103</span>      * values as the need suits. eg For the SoundBox class, we've put a resource size 
+<span class='line'>104</span>      * of 8, as that takes a long time to initialise compared to other operations, but 
+<span class='line'>105</span>      * it does it in 8 chunks.&lt;/p>
+<span class='line'>106</span>      * 
+<span class='line'>107</span>      * &lt;p>See the LoadBinary class below for a simple example of these properties are set.&lt;/p>
+<span class='line'>108</span>      * @function
+<span class='line'>109</span>      */</span><span class="WHIT">
+<span class='line'>110</span> </span><span class="WHIT">    </span><span class="NAME">this.CheckProgress</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">checkProgress</span><span class="PUNC">;</span><span class="WHIT">	</span><span class="WHIT">
+<span class='line'>111</span> 
+<span class='line'>112</span> </span><span class="WHIT">    </span><span class="COMM">// If we have a callback, start off checking the loading progress</span><span class="WHIT">
+<span class='line'>113</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">loadedCallback</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>114</span> </span><span class="WHIT">        </span><span class="NAME">loaderCheckInterval</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">setInterval</span><span class="PUNC">(</span><span class="NAME">checkLoader</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">checkInterval</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>115</span> 
+<span class='line'>116</span> </span><span class="WHIT">    </span><span class="COMM">/* Checking the loading process. 
+<span class='line'>117</span>      * 
+<span class='line'>118</span>      * This is called every so often (usually every 500ms) until laoding is completed.
+<span class='line'>119</span>      */</span><span class="WHIT">
+<span class='line'>120</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">checkLoader</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>121</span> </span><span class="WHIT">        </span><span class="NAME">checkProgress</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">						</span><span class="COMM">// Checking the progress</span><span class="WHIT">
+<span class='line'>122</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">completed</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">						</span><span class="COMM">// If it's complete</span><span class="WHIT">
+<span class='line'>123</span> </span><span class="WHIT">            </span><span class="NAME">clearInterval</span><span class="PUNC">(</span><span class="NAME">loaderCheckInterval</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">	</span><span class="COMM">// ... Stop the process</span><span class="WHIT">
+<span class='line'>124</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">loadedCallback</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT">			</span><span class="COMM">// ... and if there's a callback</span><span class="WHIT">
+<span class='line'>125</span> </span><span class="WHIT">                </span><span class="NAME">loadedCallback</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">				</span><span class="COMM">// ... call it.</span><span class="WHIT">
+<span class='line'>126</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>127</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>128</span> 
+<span class='line'>129</span> </span><span class="WHIT">    </span><span class="COMM">// Single check of loading progress</span><span class="WHIT">
+<span class='line'>130</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">checkProgress</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>131</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">local_toLoad</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>132</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">local_loaded</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>133</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">length</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">resources.length</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>134</span> </span><span class="WHIT">        </span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">length</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="PUNC">++</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>135</span> </span><span class="WHIT">        	</span><span class="COMM">// Check 1: if the resource has fully loaded</span><span class="WHIT">
+<span class='line'>136</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">resources</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">loaded</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'>137</span> </span><span class="WHIT">            	</span><span class="NAME">local_loaded</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">resources</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">resource_size</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>138</span> </span><span class="WHIT">            </span><span class="COMM">// Check 2: if the resource has partially loaded</span><span class="WHIT">
+<span class='line'>139</span> </span><span class="WHIT">            </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>140</span> </span><span class="WHIT">            	</span><span class="NAME">local_loaded</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">resources</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">resource_loaded</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>141</span> </span><span class="WHIT">            	</span><span class="NAME">local_toLoad</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">resources</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">resource_size</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NAME">resources</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">resource_loaded</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>142</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>143</span> </span><span class="WHIT">        </span><span class="COMM">// If there's been a change in the progress, save that</span><span class="WHIT">
+<span class='line'>144</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">local_toLoad</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="NAME">toLoad</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">local_loaded</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="NAME">loaded</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>145</span> </span><span class="WHIT">        	</span><span class="NAME">toLoad</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">local_toLoad</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>146</span> </span><span class="WHIT">        	</span><span class="NAME">loaded</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">local_loaded</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>147</span> </span><span class="WHIT">        	</span><span class="COMM">// If there's a callback on change (eg for progress indicators), call that</span><span class="WHIT">
+<span class='line'>148</span> </span><span class="WHIT">        	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">processChangedCallback</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>149</span> </span><span class="WHIT">        		</span><span class="NAME">processChangedCallback</span><span class="PUNC">(</span><span class="NAME">loaded</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">toLoad</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="COMM">// Callback will receive info of the progress</span><span class="WHIT">
+<span class='line'>150</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>151</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">toLoad</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT">			</span><span class="COMM">// If there's nothing left to load</span><span class="WHIT">
+<span class='line'>152</span> </span><span class="WHIT">            </span><span class="NAME">completed</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">		</span><span class="COMM">// ... we're finished!</span><span class="WHIT">
+<span class='line'>153</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>154</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>155</span> 
+<span class='line'>156</span> </span><span class="COMM">/**
+<span class='line'>157</span>  * &lt;h2>Binary&lt;/h2>
+<span class='line'>158</span>  * &lt;p>&lt;strong>Loads a binary file from a URL into a buffer, and call a callback with the buffer as parameter.&lt;/strong>&lt;/p>
+<span class='line'>159</span>  * &lt;p>&lt;em>var binaryFile = new SeniorDads.Loader.Binary(url, buffer, loadedCallBack);&lt;/em>&lt;p>
+<span class='line'>160</span>  * &lt;p>This a simple example of a resource wrapper class.&lt;/p>
+<span class='line'>161</span>  * @constructor
+<span class='line'>162</span>  * @class Load a binary file resource
+<span class='line'>163</span>  * @param {string} url - URL of binary file.
+<span class='line'>164</span>  * @param {ArrayBuffer} buffer - pointer to buffer for file to be loaded into.
+<span class='line'>165</span>  * @param {function} loadedCallBack - a function to call when the file has been loaded.
+<span class='line'>166</span>  * @property {boolean} loaded - Whether the file has loaded.
+<span class='line'>167</span>  * @property {number} resource_size - Size of the resource. (1 in this case.)
+<span class='line'>168</span>  * @property {number} resource_loaded - The amount already loaded. (0-1 in this case.)
+<span class='line'>169</span>  * @example
+<span class='line'>170</span>  *  var progressIndicator = document.getElementById('progressIndicatorPlaceholder');
+<span class='line'>171</span>  *  
+<span class='line'>172</span>  *  var binaryBuffer;
+<span class='line'>173</span>  *  var binaryFile = new SeniorDads.Loader.Binary("myBinaryFile.bin", binaryBuffer,
+<span class='line'>174</span>  *		function (responseBuffer) { binaryBuffer = responseBuffer; }
+<span class='line'>175</span>  *  );
+<span class='line'>176</span>  *  
+<span class='line'>177</span>  * 	var loader = new SeniorDads.Loader( [ binaryFile ], completed, progress, 1000 );
+<span class='line'>178</span>  *  
+<span class='line'>179</span>  *  function progress(loaded, toLoad) {
+<span class='line'>180</span>  *  	progressIndicator.innerHTML = loaded + " loaded, " + toLoad + " to load.";
+<span class='line'>181</span>  *  }
+<span class='line'>182</span> 
+<span class='line'>183</span>  *  function completed() {
+<span class='line'>184</span>  *  	progressIndicator.innerHTML = "Loading complete.";
+<span class='line'>185</span>  *  }
+<span class='line'>186</span>  */</span><span class="WHIT">
+<span class='line'>187</span> </span><span class="NAME">SeniorDads.Loader.Binary</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">url</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">buffer</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">loadedCallBack</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>188</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">loaded</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">				</span><span class="COMM">// Start off assuming we haven't loaded the file.</span><span class="WHIT">
+<span class='line'>189</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">resource_loaded</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">		</span><span class="COMM">//</span><span class="WHIT">
+<span class='line'>190</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'>191</span> </span><span class="WHIT">    </span><span class="COMM">// Set properties</span><span class="WHIT">
+<span class='line'>192</span> </span><span class="WHIT">    </span><span class="NAME">this.loaded</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">loaded</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">					</span><span class="COMM">// Whether the file has loaded</span><span class="WHIT">
+<span class='line'>193</span> </span><span class="WHIT">    </span><span class="NAME">this.resource_size</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">					</span><span class="COMM">// Size of the resource</span><span class="WHIT">
+<span class='line'>194</span> </span><span class="WHIT">    </span><span class="NAME">this.resource_loaded</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">resource_loaded</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">	</span><span class="COMM">// The amount already loaded</span><span class="WHIT">
+<span class='line'>195</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'>196</span> </span><span class="WHIT">    </span><span class="COMM">// Make a new request to load the file.</span><span class="WHIT">
+<span class='line'>197</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">binaryLoader</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">XMLHttpRequest</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>198</span> </span><span class="WHIT">    </span><span class="NAME">binaryLoader.open</span><span class="PUNC">(</span><span class="STRN">"GET"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">url</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>199</span> </span><span class="WHIT">    </span><span class="NAME">binaryLoader.overrideMimeType</span><span class="PUNC">(</span><span class="STRN">'text/plain; charset=x-user-defined'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>200</span> </span><span class="WHIT">    </span><span class="NAME">binaryLoader.responseType</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"arraybuffer"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>201</span> </span><span class="WHIT">    </span><span class="COMM">// Set up what to do when the file is loaded</span><span class="WHIT">
+<span class='line'>202</span> </span><span class="WHIT">    </span><span class="NAME">binaryLoader.onload</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">myEvent</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">		</span><span class="COMM">// When the file is loaded...</span><span class="WHIT">
+<span class='line'>203</span> </span><span class="WHIT">        </span><span class="NAME">buffer</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">binaryLoader.response</span><span class="PUNC">;</span><span class="WHIT">				</span><span class="COMM">// ... get the binary data into the buffer</span><span class="WHIT">
+<span class='line'>204</span> </span><span class="WHIT">        </span><span class="NAME">loaded</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">								</span><span class="COMM">// ... flag up the resource as loaded.</span><span class="WHIT">
+<span class='line'>205</span> </span><span class="WHIT">        </span><span class="NAME">resource_loaded</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">;</span><span class="WHIT">						</span><span class="COMM">//</span><span class="WHIT">
+<span class='line'>206</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">loadedCallBack</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT">					</span><span class="COMM">// ... If there's a callback ...</span><span class="WHIT">
+<span class='line'>207</span> </span><span class="WHIT">            </span><span class="NAME">loadedCallBack</span><span class="PUNC">(</span><span class="NAME">buffer</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">						</span><span class="COMM">// ... call the callback with the buffer as a parameter</span><span class="WHIT">
+<span class='line'>208</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>209</span> </span><span class="WHIT">    </span><span class="COMM">// End of set up for when the file is loaded</span><span class="WHIT">
+<span class='line'>210</span> </span><span class="WHIT">    </span><span class="NAME">binaryLoader.send</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> 	</span><span class="COMM">// Now send the request.</span><span class="WHIT">
+<span class='line'>211</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>212</span> </span></pre></body></html>

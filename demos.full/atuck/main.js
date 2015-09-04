@@ -5,7 +5,7 @@ SeniorDads.Demos.AnalTuck = function(placeholder, name, callbackOnEnd) {
     if (!(callbackOnEnd === undefined)) callbackOnEnd = null;
     var analTuck, demoWindow, fire1Screen, fire2Screen, initTextScreen, textOverlayScreen, font, music, loader;
     var loadedCallback = null;    
-    analTuck = new SeniorDads.Demos.Demo(load, null, endDemo);
+    analTuck = new SeniorDads.Demos.Demo(null, load, null, endDemo);
     analTuck.add( new SeniorDads.Demos.Demo.DemoPart( null, start, startAbort) );
     analTuck.add( new SeniorDads.Demos.Demo.DemoPart( null, main, endDemo) );
     analTuck.add( new SeniorDads.Demos.Demo.DemoPart( null, endDemo, null) );
@@ -36,7 +36,7 @@ SeniorDads.Demos.AnalTuck = function(placeholder, name, callbackOnEnd) {
         var pauseTable = new Uint16Array([5, 1, 2, 1, 5, 1, 3, 4, 5, 6, 2, 1, 1, 1, 1, 4, 50, 1]);
         var x = 0;
         var y = 0;
-        var context = initTextScreen.context();
+        var context = initTextScreen.context;
         initTextScreen.Clear('#ffffff');
         font.PrintText(initTextScreen, 0, 0, 'THE SENIOR DADS\n\n\npresent\n\nTHE aNaL TuCK demo!\n\n68030 code by Nonce\nDSP code by Jessie');
         initTextScreen.Show();
@@ -117,10 +117,10 @@ SeniorDads.Demos.AnalTuck = function(placeholder, name, callbackOnEnd) {
         var from = 0;
         var textY = textYstart;
         var showText = true;
-        var textContext = textOverlayScreen.context();
+        var textContext = textOverlayScreen.context;
         var currentText;
         font.SetColours([0xff, 0xff, 0xff, 0xff], [0, 0, 0, 0xff]);
-        music.Play();
+        music.play();
         fire1Screen.Show();
         textOverlayScreen.Show();
         var mainAnimDelay = setInterval(mainAnim, demoDelay);
@@ -167,7 +167,7 @@ SeniorDads.Demos.AnalTuck = function(placeholder, name, callbackOnEnd) {
     }
 
     function endDemo() {
-        music.Stop();
+        music.stop();
         initTextScreen.Clear();
         initTextScreen.Show();
         fire2Screen.Hide();

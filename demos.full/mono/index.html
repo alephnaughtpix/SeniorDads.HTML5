@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <title>Monomental by The Senior Dads</title>
+        <script language="javascript" type="text/javascript" src="../common/SeniorDads.js"></script>
+        <script language="javascript" type="text/javascript" src="../common/Loader.js"></script>
+        <script language="javascript" type="text/javascript" src="../common/Image.js"></script>
+        <script language="javascript" type="text/javascript" src="../common/Font.js"></script>
+        <script language="javascript" type="text/javascript" src="../common/Music.js"></script>
+        <script language="javascript" type="text/javascript" src="../common/ScreenHandler.js"></script>
+        <script language="javascript" type="text/javascript" src="main.js"></script>
+        <script language="javascript" type="text/javascript">
+            function runDemo() {
+                var demo = new SeniorDads.Demos.MonoMental(document.getElementById('demo'), 'democanvas'); 
+                demo.LoadAndStart();
+            }
+        </script>
+        <style>
+            body { background-color: #000000; }
+            .demoCover { width: 100%; }
+            #demo { margin-left: auto; margin-right: auto; width: 640px; }
+            canvas { border: 1px solid #888888; }
+        </style>
+    </head>
+    <body onload="runDemo();">
+        <div class="demoCover">
+            <div id="demo"></div>
+        </div>
+    </body>
+</html>

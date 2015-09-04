@@ -1,0 +1,563 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/**
+<span class='line'>  2</span>  * @fileOverview Senior Dads demo framework.
+<span class='line'>  3</span>  * @author The Senior Dads
+<span class='line'>  4</span>  * @version 0.4
+<span class='line'>  5</span>  */</span><span class="WHIT">
+<span class='line'>  6</span> 
+<span class='line'>  7</span> </span><span class="COMM">/**
+<span class='line'>  8</span>  * Cross browser hack for requestAnimFrame 
+<span class='line'>  9</span>  * @private
+<span class='line'> 10</span>  */</span><span class="WHIT">
+<span class='line'> 11</span> </span><span class="NAME">window.requestAnimFrame</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 12</span> </span><span class="WHIT">	</span><span class="KEYW">return</span><span class="WHIT">  </span><span class="NAME">window.requestAnimationFrame</span><span class="WHIT">       </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'> 13</span> </span><span class="WHIT">		</span><span class="NAME">window.webkitRequestAnimationFrame</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'> 14</span> </span><span class="WHIT">		</span><span class="NAME">window.mozRequestAnimationFrame</span><span class="WHIT">    </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'> 15</span> </span><span class="WHIT">		</span><span class="NAME">window.oRequestAnimationFrame</span><span class="WHIT">      </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'> 16</span> </span><span class="WHIT">		</span><span class="NAME">window.msRequestAnimationFrame</span><span class="WHIT">     </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'> 17</span> </span><span class="WHIT">		</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="COMM">/* function */</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="COMM">/* DOMElement */</span><span class="WHIT"> </span><span class="NAME">element</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="WHIT">			</span><span class="NAME">window.setTimeout</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">1000</span><span class="WHIT"> </span><span class="PUNC">/</span><span class="WHIT"> </span><span class="NUMB">60</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 19</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 20</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 21</span> 
+<span class='line'> 22</span> </span><span class="COMM">/*
+<span class='line'> 23</span>  * NAMESPACE HELPER ROUTINES ==========================================
+<span class='line'> 24</span>  * 
+<span class='line'> 25</span>  */</span><span class="WHIT">
+<span class='line'> 26</span> 
+<span class='line'> 27</span> </span><span class="COMM">// Create the root namespace and making sure we're not overwriting it</span><span class="WHIT">
+<span class='line'> 28</span> 
+<span class='line'> 29</span> </span><span class="COMM">/**
+<span class='line'> 30</span>   * &lt;h1>SENIOR DADS HTML5 DEMO ROUTINES!&lt;/h1>
+<span class='line'> 31</span>   * &lt;p>A series of helper classes and/or hacks used by The Senior Dads for their HTML5 demos.&lt;/p>
+<span class='line'> 32</span>   * @namespace SeniorDads
+<span class='line'> 33</span>   */</span><span class="WHIT">
+<span class='line'> 34</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">SeniorDads</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">SeniorDads</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 35</span> </span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'> 36</span> </span><span class="COMM">// create a general purpose namespace method</span><span class="WHIT">
+<span class='line'> 37</span> </span><span class="COMM">// this will allow us to create namespace a bit easier</span><span class="WHIT">
+<span class='line'> 38</span> </span><span class="NAME">SeniorDads.CreateNameSpace</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">namespace</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 39</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">nsparts</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">namespace.split</span><span class="PUNC">(</span><span class="STRN">"."</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 40</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">parent</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">SeniorDads</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 41</span> </span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'> 42</span> </span><span class="WHIT">    </span><span class="COMM">// we want to be able to include or exclude the root namespace </span><span class="WHIT">
+<span class='line'> 43</span> </span><span class="WHIT">    </span><span class="COMM">// So we strip it if it's in the namespace</span><span class="WHIT">
+<span class='line'> 44</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">nsparts</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">"SeniorDads"</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 45</span> </span><span class="WHIT">        </span><span class="NAME">nsparts</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">nsparts.slice</span><span class="PUNC">(</span><span class="NUMB">1</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 46</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 47</span> </span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'> 48</span> </span><span class="WHIT">    </span><span class="COMM">// loop through the parts and create </span><span class="WHIT">
+<span class='line'> 49</span> </span><span class="WHIT">    </span><span class="COMM">// a nested namespace if necessary</span><span class="WHIT">
+<span class='line'> 50</span> </span><span class="WHIT">    </span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">nsparts.length</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="PUNC">++</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 51</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">partname</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">nsparts</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 52</span> </span><span class="WHIT">        </span><span class="COMM">// check if the current parent already has </span><span class="WHIT">
+<span class='line'> 53</span> </span><span class="WHIT">        </span><span class="COMM">// the namespace declared, if not create it</span><span class="WHIT">
+<span class='line'> 54</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="WHIT"> </span><span class="NAME">parent</span><span class="PUNC">[</span><span class="NAME">partname</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="STRN">"undefined"</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 55</span> </span><span class="WHIT">            </span><span class="NAME">parent</span><span class="PUNC">[</span><span class="NAME">partname</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 56</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 57</span> </span><span class="WHIT">        </span><span class="COMM">// get a reference to the deepest element </span><span class="WHIT">
+<span class='line'> 58</span> </span><span class="WHIT">        </span><span class="COMM">// in the hierarchy so far</span><span class="WHIT">
+<span class='line'> 59</span> </span><span class="WHIT">        </span><span class="NAME">parent</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">parent</span><span class="PUNC">[</span><span class="NAME">partname</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 60</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 61</span> </span><span class="WHIT">    </span><span class="COMM">// the parent is now completely constructed </span><span class="WHIT">
+<span class='line'> 62</span> </span><span class="WHIT">    </span><span class="COMM">// with empty namespaces and can be used.</span><span class="WHIT">
+<span class='line'> 63</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">parent</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 65</span> 
+<span class='line'> 66</span> </span><span class="COMM">/*
+<span class='line'> 67</span>  * END OF NAMESPACE HELPER ROUTINES ==========================================
+<span class='line'> 68</span>  * 
+<span class='line'> 69</span>  */</span><span class="WHIT">
+<span class='line'> 70</span> 
+<span class='line'> 71</span> 
+<span class='line'> 72</span> </span><span class="COMM">/**
+<span class='line'> 73</span>  * &lt;h1>Wobbler&lt;/h1>
+<span class='line'> 74</span>  * &lt;p>&lt;strong>Create a "wobble" effect.&lt;/strong>&lt;/p>
+<span class='line'> 75</span>  * &lt;p>&lt;em>var myWobbler = new SeniorDads.Wobbler(hWobbleParameters, vWobbleParameters, zWobbleParameters);&lt;/em>&lt;/p>
+<span class='line'> 76</span>  * @constructor
+<span class='line'> 77</span>  * @class Create a "wobble" effect.
+<span class='line'> 78</span>  * @param {Object[]} hWobbleParameters Horizontal wobble parameters.
+<span class='line'> 79</span>  * @param {Object[]} [vWobbleParameters] vertical wobble parameters.
+<span class='line'> 80</span>  * @param {Object[]} [zWobbleParameters] Z-index wobble parameters.
+<span class='line'> 81</span>  * @property {number} h Get next horizontal wobble differential.
+<span class='line'> 82</span>  * @property {number} v Get next vertical wobble differential.
+<span class='line'> 83</span>  * @property {number} z Get next Z-index wobble differential.
+<span class='line'> 84</span>  * @example
+<span class='line'> 85</span>  *  //Place an image in the center of a 640x400 area and wobble it.
+<span class='line'> 86</span>  *  
+<span class='line'> 87</span>  *  // First create the area and load the image
+<span class='line'> 88</span>  *  var myPlaceholder = document.getElementById('placeholder'); // &lt;- Assuming we have a div with ID of 'placeholder' on the web page.
+<span class='line'> 89</span>  *  myPlaceholder.style.width = "640px";
+<span class='line'> 90</span>  *  myPlaceholder.style.height = "400px";
+<span class='line'> 91</span>  *  myPlaceholder.style.position = "relative";
+<span class='line'> 92</span>  *  var myImage = new Image();
+<span class='line'> 93</span>  * 	myImage = "myImage_url.png";
+<span class='line'> 94</span>  * 	myImage.style.position = "absolute";
+<span class='line'> 95</span>  *  myPlaceholder.appendChild(myImage);
+<span class='line'> 96</span>  *  
+<span class='line'> 97</span>  *  var myWobbler;
+<span class='line'> 98</span>  *  
+<span class='line'> 99</span>  *  // When the image is loaded, create the wobbler
+<span class='line'>100</span>  *  myImage.onload = function() {
+<span class='line'>101</span>  *  
+<span class='line'>102</span>  *  	myWobbler = new SeniorDads.Wobbler(
+<span class='line'>103</span>  *  		[ 
+<span class='line'>104</span>  *  			{value: 0, amp: 3, inc: 0.30},
+<span class='line'>105</span>  *  			{value: 0.5, amp: 3, inc: 0.40}
+<span class='line'>106</span>  *  		],
+<span class='line'>107</span>  *  		[
+<span class='line'>108</span>  *  			{value: 0.5, amp: 3, inc: 0.20},
+<span class='line'>109</span>  *  			{value: 0, amp: 2, inc: 0.10}
+<span class='line'>110</span>  *  		]);
+<span class='line'>111</span>  *  	// Start the animation loop.
+<span class='line'>112</span>  *  	animationLoop();
+<span class='line'>113</span>  *  }
+<span class='line'>114</span>  *  
+<span class='line'>115</span>  *  // Animation loop- wobbles the image relative to the centre of the area.
+<span class='line'>116</span>  *  function animationLoop() {
+<span class='line'>117</span>  *  	var x = 320 + myWobbler.h();
+<span class='line'>118</span>  *  	var y = 200 + myWobbler.v();
+<span class='line'>119</span>  *  	myImage.style.left = x + "px";
+<span class='line'>120</span>  *  	myImage.style.top = y + "px";
+<span class='line'>121</span>  *  	requestAnimFrame( animationLoop );
+<span class='line'>122</span>  *  }
+<span class='line'>123</span>  */</span><span class="WHIT">
+<span class='line'>124</span> </span><span class="NAME">SeniorDads.Wobbler</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">hWobbleParameters</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">vWobbleParameters</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">zWobbleParameters</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>125</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">hWobbleParameters</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">hWobbleParameters</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>126</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">vWobbleParameters</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">vWobbleParameters</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">	</span><span class="COMM">// Default for optional parameter</span><span class="WHIT">
+<span class='line'>127</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">zWobbleParameters</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">zWobbleParameters</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">	</span><span class="COMM">// Default for optional parameter</span><span class="WHIT">
+<span class='line'>128</span> </span><span class="WHIT">	</span><span class="WHIT">
+<span class='line'>129</span> </span><span class="WHIT">	</span><span class="COMM">// Set properties</span><span class="WHIT">
+<span class='line'>130</span> </span><span class="WHIT">	</span><span class="NAME">this.h</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">wobble</span><span class="PUNC">(</span><span class="NAME">hWobbleParameters</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">		</span><span class="COMM">// get next horizontal wobble differential</span><span class="WHIT">
+<span class='line'>131</span> </span><span class="WHIT">	</span><span class="COMM">// Get next vertical wobble differential</span><span class="WHIT">
+<span class='line'>132</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">hWobbleParameters</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">vWobbleParameters</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>133</span> </span><span class="WHIT">		</span><span class="NAME">this.v</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.h</span><span class="PUNC">;</span><span class="WHIT">											</span><span class="COMM">// If only "horizontal" wobble supplied, vertical differential = horizontal</span><span class="WHIT">
+<span class='line'>134</span> </span><span class="WHIT">	</span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'>135</span> </span><span class="WHIT">	</span><span class="COMM">// Get next z-index wobble differential</span><span class="WHIT">
+<span class='line'>136</span> </span><span class="WHIT">	</span><span class="NAME">this.v</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">wobble</span><span class="PUNC">(</span><span class="NAME">vWobbleParameters</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>137</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">hWobbleParameters</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">zWobbleParameters</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>138</span> </span><span class="WHIT">		</span><span class="NAME">this.z</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.h</span><span class="PUNC">;</span><span class="WHIT">											</span><span class="COMM">// If only "horizontal" wobble supplied, z-index differential = horizontal</span><span class="WHIT">
+<span class='line'>139</span> </span><span class="WHIT">	</span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'>140</span> </span><span class="WHIT">		</span><span class="NAME">this.z</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">wobble</span><span class="PUNC">(</span><span class="NAME">zWobbleParameters</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>141</span> </span><span class="WHIT">		</span><span class="WHIT">
+<span class='line'>142</span> </span><span class="WHIT">	</span><span class="COMM">/* Main wobbling calculator.
+<span class='line'>143</span> 	 * 
+<span class='line'>144</span> 	 * This combines the sines waves and their positions as defined in the 
+<span class='line'>145</span> 	 * wobble parameters to arrive at a combined wobble value.
+<span class='line'>146</span> 	 * 
+<span class='line'>147</span> 	 */</span><span class="WHIT">
+<span class='line'>148</span> </span><span class="WHIT">	</span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">wobble</span><span class="PUNC">(</span><span class="NAME">wobbleParameters</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>149</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">wobbleVal</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">			</span><span class="COMM">// Default value for invalid wobble.</span><span class="WHIT">
+<span class='line'>150</span> </span><span class="WHIT">		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">wobbleParameters</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT">	</span><span class="COMM">// only calculate if we have wobble parameters.</span><span class="WHIT">
+<span class='line'>151</span> </span><span class="WHIT">			</span><span class="NAME">wobbleVal</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">				</span><span class="COMM">// Reset wobble value.</span><span class="WHIT">
+<span class='line'>152</span> </span><span class="WHIT">			</span><span class="KEYW">for</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">wobbleParameters.length</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="PUNC">++</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> 							</span><span class="COMM">// For each wobble param...</span><span class="WHIT">
+<span class='line'>153</span> </span><span class="WHIT">				</span><span class="NAME">wobbleVal</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">Math.sin</span><span class="PUNC">(</span><span class="NAME">wobbleParameters</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">value</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">*</span><span class="WHIT"> </span><span class="NAME">wobbleParameters</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">amp</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="COMM">// Add current sine wave position of wobble element</span><span class="WHIT">
+<span class='line'>154</span> </span><span class="WHIT">				</span><span class="NAME">wobbleParameters</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">value</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">wobbleParameters</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">inc</span><span class="PUNC">;</span><span class="WHIT">						</span><span class="COMM">// Move onto next sine wave position.</span><span class="WHIT">
+<span class='line'>155</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>156</span> </span><span class="WHIT">		</span><span class="COMM">// Combined wobble value has now been calculated.</span><span class="WHIT">
+<span class='line'>157</span> </span><span class="WHIT">		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">wobbleVal</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'>158</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>159</span> </span><span class="WHIT">	</span><span class="WHIT">
+<span class='line'>160</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>161</span> 
+<span class='line'>162</span> </span><span class="COMM">/**
+<span class='line'>163</span>  * &lt;h1>Bomb&lt;/h1>
+<span class='line'>164</span>  * &lt;p>&lt;strong>Display the Atari TOS "bomb" pattern for exceptions in Atari 16/24bit machines.&lt;/strong>&lt;/p>
+<span class='line'>165</span>  * &lt;p>&lt;em>var myBomb = new SeniorDads.Bomb();&lt;/em>&lt;/p>
+<span class='line'>166</span>  * @class Display the Atari TOS "bomb" pattern.
+<span class='line'>167</span>  * @constructor
+<span class='line'>168</span>  * @example
+<span class='line'>169</span>  *  // First create the canvas to bomb.
+<span class='line'>170</span>  *  var myPlaceholder = document.getElementById('placeholder'); // &lt;- Assuming we have a div with ID of 'placeholder' on the web page.
+<span class='line'>171</span>  *  var myCanvas = myPlaceholder.appendChild(document.createElement('canvas'));
+<span class='line'>172</span>  *  
+<span class='line'>173</span>  *  // Now bomb it!
+<span class='line'>174</span>  *  var myBomb = new SeniorDads.Bomb();
+<span class='line'>175</span>  *  myBomb.bombCanvas(myCanvas, 4);
+<span class='line'>176</span>  */</span><span class="WHIT">
+<span class='line'>177</span> </span><span class="NAME">SeniorDads.Bomb</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>178</span> </span><span class="WHIT">    </span><span class="COMM">// Atari TOS bomb bitmap pattern- copied from old demo source code, itself copied from ROM listing in ST Internals!</span><span class="WHIT">
+<span class='line'>179</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">bombBits</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Uint16Array</span><span class="PUNC">(</span><span class="PUNC">[</span><span class="WHIT">
+<span class='line'>180</span> </span><span class="WHIT">        </span><span class="NUMB">1536</span><span class="PUNC">,</span><span class="WHIT">  </span><span class="COMM">// %0000011000000000</span><span class="WHIT">
+<span class='line'>181</span> </span><span class="WHIT">        </span><span class="NUMB">10496</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="COMM">// %0010100100000000</span><span class="WHIT">
+<span class='line'>182</span> </span><span class="WHIT">        </span><span class="NUMB">128</span><span class="PUNC">,</span><span class="WHIT">   </span><span class="COMM">// %0000000010000000</span><span class="WHIT">
+<span class='line'>183</span> </span><span class="WHIT">        </span><span class="NUMB">18496</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="COMM">// %0100100001000000</span><span class="WHIT">
+<span class='line'>184</span> </span><span class="WHIT">        </span><span class="NUMB">4592</span><span class="PUNC">,</span><span class="WHIT">  </span><span class="COMM">// %0001000111110000</span><span class="WHIT">
+<span class='line'>185</span> </span><span class="WHIT">        </span><span class="NUMB">496</span><span class="PUNC">,</span><span class="WHIT">   </span><span class="COMM">// %0000000111110000</span><span class="WHIT">
+<span class='line'>186</span> </span><span class="WHIT">        </span><span class="NUMB">2044</span><span class="PUNC">,</span><span class="WHIT">  </span><span class="COMM">// %0000011111111100</span><span class="WHIT">
+<span class='line'>187</span> </span><span class="WHIT">        </span><span class="NUMB">4094</span><span class="PUNC">,</span><span class="WHIT">  </span><span class="COMM">// %0000111111111110</span><span class="WHIT">
+<span class='line'>188</span> </span><span class="WHIT">        </span><span class="NUMB">4094</span><span class="PUNC">,</span><span class="WHIT">  </span><span class="COMM">// %0000111111111110</span><span class="WHIT">
+<span class='line'>189</span> </span><span class="WHIT">        </span><span class="NUMB">8191</span><span class="PUNC">,</span><span class="WHIT">  </span><span class="COMM">// %0001111111111111</span><span class="WHIT">
+<span class='line'>190</span> </span><span class="WHIT">        </span><span class="NUMB">8175</span><span class="PUNC">,</span><span class="WHIT">  </span><span class="COMM">// %0001111111101111</span><span class="WHIT">
+<span class='line'>191</span> </span><span class="WHIT">        </span><span class="NUMB">4078</span><span class="PUNC">,</span><span class="WHIT">  </span><span class="COMM">// %0000111111101110</span><span class="WHIT">
+<span class='line'>192</span> </span><span class="WHIT">        </span><span class="NUMB">4062</span><span class="PUNC">,</span><span class="WHIT">  </span><span class="COMM">// %0000111111011110</span><span class="WHIT">
+<span class='line'>193</span> </span><span class="WHIT">        </span><span class="NUMB">2044</span><span class="PUNC">,</span><span class="WHIT">  </span><span class="COMM">// %0000011111111100</span><span class="WHIT">
+<span class='line'>194</span> </span><span class="WHIT">        </span><span class="NUMB">1016</span><span class="PUNC">,</span><span class="WHIT">  </span><span class="COMM">// %0000001111111000</span><span class="WHIT">
+<span class='line'>195</span> </span><span class="WHIT">        </span><span class="NUMB">224</span><span class="WHIT">    </span><span class="COMM">// %0000000011100000</span><span class="WHIT">
+<span class='line'>196</span> </span><span class="WHIT">    </span><span class="PUNC">]</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>197</span> </span><span class="WHIT">    </span><span class="COMM">// Set up a canvas for the canvas friendly version of the bomb image.</span><span class="WHIT">
+<span class='line'>198</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">truColBombCanvas</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">document.createElement</span><span class="PUNC">(</span><span class="STRN">'canvas'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>199</span> </span><span class="WHIT">    </span><span class="NAME">truColBombCanvas.id</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"SeniorDads.Bomb.Store"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>200</span> </span><span class="WHIT">    </span><span class="NAME">truColBombCanvas.width</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">16</span><span class="PUNC">;</span><span class="WHIT">					</span><span class="COMM">// Bomb is 16x16 pixels.</span><span class="WHIT">
+<span class='line'>201</span> </span><span class="WHIT">    </span><span class="NAME">truColBombCanvas.height</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">16</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>202</span> </span><span class="WHIT">    </span><span class="NAME">truColBombCanvas.style.visibility</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'hidden'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>203</span> 
+<span class='line'>204</span> </span><span class="WHIT">    </span><span class="NAME">convertBombToTruCol</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">			</span><span class="COMM">// Convert the bitmap to the canvas friendly version of the bomb image.</span><span class="WHIT">
+<span class='line'>205</span> 
+<span class='line'>206</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>207</span>      * &lt;h3>bombCanvas&lt;/h3>
+<span class='line'>208</span>      * 
+<span class='line'>209</span>      * &lt;p>&lt;strong>Display bombs.&lt;/strong>&lt;/p>
+<span class='line'>210</span>      * &lt;p>The bombs are drawn in black on white in the middle left of the screen.&lt;/p>
+<span class='line'>211</span>      * @function
+<span class='line'>212</span>      * @param {SeniorDads.ScreenHandler.Screen} screen Screen to draw to.
+<span class='line'>213</span>      * @param {number} bombCount Number of bombs to draw
+<span class='line'>214</span>      */</span><span class="WHIT">
+<span class='line'>215</span> </span><span class="WHIT">    </span><span class="NAME">this.bombCanvas</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">bombCanvas</span><span class="PUNC">;</span><span class="WHIT">	</span><span class="COMM">// Setup method for creating bombs</span><span class="WHIT">
+<span class='line'>216</span> 
+<span class='line'>217</span> </span><span class="WHIT">    </span><span class="COMM">/*
+<span class='line'>218</span>      * Convert bomb bitmap to canvas colours.
+<span class='line'>219</span>      * 
+<span class='line'>220</span>      * For each pixel we set the foreground/background colour accordingly. 
+<span class='line'>221</span>      * ie black on white, as used in the Atari Falcon in trucolor mode.
+<span class='line'>222</span>      *  
+<span class='line'>223</span>      */</span><span class="WHIT">
+<span class='line'>224</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">convertBombToTruCol</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>225</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">foreground</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">0xff</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">					</span><span class="COMM">// Foreground is black.</span><span class="WHIT">
+<span class='line'>226</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">background</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NUMB">0xff</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">0xff</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">0xff</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">0xff</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">			</span><span class="COMM">// Background is white.</span><span class="WHIT">
+<span class='line'>227</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">context</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">truColBombCanvas.getContext</span><span class="PUNC">(</span><span class="STRN">'2d'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>228</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">canvasData</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">context.createImageData</span><span class="PUNC">(</span><span class="NUMB">16</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">16</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">	</span><span class="COMM">// Create the 16x16 image data.</span><span class="WHIT">
+<span class='line'>229</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">colour</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>230</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">canvasDataPosition</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">							</span><span class="COMM">// Start at the top left of the image data.</span><span class="WHIT">
+<span class='line'>231</span> </span><span class="WHIT">        </span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NUMB">16</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="PUNC">++</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">						</span><span class="COMM">// There's 16 words in the bomb,</span><span class="WHIT">
+<span class='line'>232</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">currentBombLine</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">bombBits</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">				</span><span class="COMM">// ... each of which equals a single row of the bomb pixels,</span><span class="WHIT">
+<span class='line'>233</span> </span><span class="WHIT">            </span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">j</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NUMB">16</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">j</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">--</span><span class="NAME">j</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">			</span><span class="COMM">// ... which is 16 pixels in length</span><span class="WHIT">
+<span class='line'>234</span> </span><span class="WHIT">            	</span><span class="COMM">// Bit-test current pixel in word to determine if there's a pixel present.</span><span class="WHIT">
+<span class='line'>235</span> </span><span class="WHIT">            	</span><span class="COMM">// If there is use the foreground colour, otherwise the background colour.</span><span class="WHIT">
+<span class='line'>236</span> </span><span class="WHIT">                </span><span class="NAME">colour</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">(</span><span class="NAME">currentBombLine</span><span class="WHIT"> </span><span class="PUNC">&</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NUMB">1</span><span class="WHIT"> </span><span class="PUNC">&lt;&lt;</span><span class="WHIT"> </span><span class="NAME">j</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="NAME">foreground</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">background</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>237</span> </span><span class="WHIT">            	</span><span class="COMM">// Now plot the pixel in the relevant colour.</span><span class="WHIT">
+<span class='line'>238</span> </span><span class="WHIT">                </span><span class="NAME">canvasData.data</span><span class="PUNC">[</span><span class="NAME">canvasDataPosition</span><span class="PUNC">++</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">colour</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>239</span> </span><span class="WHIT">                </span><span class="NAME">canvasData.data</span><span class="PUNC">[</span><span class="NAME">canvasDataPosition</span><span class="PUNC">++</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">colour</span><span class="PUNC">[</span><span class="NUMB">1</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>240</span> </span><span class="WHIT">                </span><span class="NAME">canvasData.data</span><span class="PUNC">[</span><span class="NAME">canvasDataPosition</span><span class="PUNC">++</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">colour</span><span class="PUNC">[</span><span class="NUMB">2</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>241</span> </span><span class="WHIT">                </span><span class="NAME">canvasData.data</span><span class="PUNC">[</span><span class="NAME">canvasDataPosition</span><span class="PUNC">++</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">colour</span><span class="PUNC">[</span><span class="NUMB">3</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>242</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>243</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>244</span> </span><span class="WHIT">        </span><span class="COMM">// Now the bomb is drawn, copy it to the bomb canvas.</span><span class="WHIT">
+<span class='line'>245</span> </span><span class="WHIT">        </span><span class="NAME">context.putImageData</span><span class="PUNC">(</span><span class="NAME">canvasData</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>246</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>247</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'>248</span> </span><span class="WHIT">    </span><span class="COMM">/*
+<span class='line'>249</span>      * bombCanvas
+<span class='line'>250</span>      * # screen - SeniorDads.ScreenHandler.Screen to draw to.
+<span class='line'>251</span>      * # bombCount - number of bombs to draw
+<span class='line'>252</span>      */</span><span class="WHIT">
+<span class='line'>253</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">bombCanvas</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">screen</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">bombCount</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>254</span> </span><span class="WHIT">    	</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">y</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">screen.height</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NUMB">16</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">/</span><span class="WHIT"> </span><span class="NUMB">2</span><span class="PUNC">;</span><span class="WHIT">			</span><span class="COMM">// Go to middle left of screen</span><span class="WHIT">
+<span class='line'>255</span> </span><span class="WHIT">    	</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">x</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>256</span> </span><span class="WHIT">    	</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">context</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">screen.context</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">				</span><span class="COMM">// Get canvas context of screen</span><span class="WHIT">
+<span class='line'>257</span> </span><span class="WHIT">    	</span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">i</span><span class="PUNC">=</span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">bombCount</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="PUNC">++</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">				</span><span class="COMM">// For the defined number of bombs...</span><span class="WHIT">
+<span class='line'>258</span> </span><span class="WHIT">    		</span><span class="NAME">context.drawImage</span><span class="PUNC">(</span><span class="NAME">truColBombCanvas</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">x</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">y</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">	</span><span class="COMM">// Copy the bomb canvas to screen.</span><span class="WHIT">
+<span class='line'>259</span> </span><span class="WHIT">    		</span><span class="NAME">x</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">16</span><span class="PUNC">;</span><span class="WHIT">									</span><span class="COMM">// Move to position of next bomb.</span><span class="WHIT">
+<span class='line'>260</span> </span><span class="WHIT">    	</span><span class="PUNC">}</span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'>261</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>262</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>263</span> 
+<span class='line'>264</span> </span><span class="COMM">/**
+<span class='line'>265</span>  * &lt;h1>SeniorDads.Demos&lt;/h1>
+<span class='line'>266</span>  * &lt;p> The lovely space in which all the Senior Dads HTML5 demos live!&lt;/p>
+<span class='line'>267</span>  * @namespace SeniorDads.Demos
+<span class='line'>268</span>  */</span><span class="WHIT">
+<span class='line'>269</span> </span><span class="NAME">SeniorDads.CreateNameSpace</span><span class="PUNC">(</span><span class="STRN">"SeniorDads.Demos"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>270</span> 
+<span class='line'>271</span> </span><span class="COMM">/**
+<span class='line'>272</span>  * &lt;h1>SeniorDads.Demos.Demo&lt;/h1>
+<span class='line'>273</span>  * &lt;p>&lt;strong>Senior Dads demo framework.&lt;/strong>&lt;/p>
+<span class='line'>274</span>  * &lt;p>&lt;em>var myDemo = new SeniorDads.Demos.Demo(preLoader, loader, init, abort);&lt;/em>&lt;/p>
+<span class='line'>275</span>  * &lt;p>This class allows you to add individual screens (See {@link SeniorDads.Demos.Demo.DemoPart}), and to handle
+<span class='line'>276</span>  * general loading of resources, and initialisation before starting the demo. There is also a &lt;i>preloader&lt;/i>, which can be
+<span class='line'>277</span>  * used if you need to set something up before loading resources. (eg a "Now loading demo" type screen.)&lt;/p>
+<span class='line'>278</span>  * &lt;p>Once the demo is started, the class can handle moving through the list of screens, or stopping the demo altogether.&lt;/p>
+<span class='line'>279</span>  * &lt;p>Both the preloader and loaders can be supplied with callback functions to be executed when they're done.&lt;p>
+<span class='line'>280</span>  * @constructor 
+<span class='line'>281</span>  * @class Senior Dads demo framework
+<span class='line'>282</span>  * @param {function} preLoader Function to call &lt;i>before&lt;/i> loading resources
+<span class='line'>283</span>  * @param {function} loader Function to call to &lt;i>start&lt;/i> loading resources
+<span class='line'>284</span>  * @param {function} init Function to call after loading resources but &lt;i>before&lt;/i> running the demo.
+<span class='line'>285</span>  * @param {function} abort Function to call if the demo needs to make a speedy exit.
+<span class='line'>286</span>  */</span><span class="WHIT">
+<span class='line'>287</span> </span><span class="NAME">SeniorDads.Demos.Demo</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">preLoader</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">loader</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">init</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">abort</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>288</span> </span><span class="WHIT">	</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">currentDemoPart</span><span class="PUNC">;</span><span class="WHIT">			</span><span class="COMM">// Currently running SeniorDads.Demos.Demo.DemoPart </span><span class="WHIT">
+<span class='line'>289</span> </span><span class="WHIT">	</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">demoPartList</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">			</span><span class="COMM">// Array of SeniorDads.Demos.Demo.DemoPart containing the demo screens.</span><span class="WHIT">
+<span class='line'>290</span> </span><span class="WHIT">	</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">currentDemoPartCounter</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="COMM">// Current position of demo</span><span class="WHIT">
+<span class='line'>291</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'>292</span> </span><span class="WHIT">	</span><span class="COMM">/**
+<span class='line'>293</span> 	 * Preload a demo, without initalising or starting.
+<span class='line'>294</span> 	 * @function
+<span class='line'>295</span> 	 * @param {function} [preLoaderDone] Function to call when preloader is finished.
+<span class='line'>296</span> 	 */</span><span class="WHIT">
+<span class='line'>297</span> </span><span class="WHIT">    </span><span class="NAME">this.preload</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">preLoad</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>298</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'>299</span> </span><span class="WHIT">	</span><span class="COMM">/**
+<span class='line'>300</span> 	 * Load a demo, without initalising or starting.
+<span class='line'>301</span> 	 * @function
+<span class='line'>302</span> 	 * @param {function} [loaderDone] Function to call when loader is finished.
+<span class='line'>303</span> 	 */</span><span class="WHIT">
+<span class='line'>304</span> </span><span class="WHIT">    </span><span class="NAME">this.load</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">load</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>305</span> </span><span class="WHIT">	</span><span class="COMM">/**
+<span class='line'>306</span> 	 * Initialise a demo, without starting.
+<span class='line'>307</span> 	 * @function
+<span class='line'>308</span> 	 */</span><span class="WHIT">
+<span class='line'>309</span> </span><span class="WHIT">    </span><span class="NAME">this.init</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">initialise</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'>310</span> </span><span class="WHIT">	</span><span class="COMM">/**
+<span class='line'>311</span> 	 * Abort a demo.
+<span class='line'>312</span> 	 * @function
+<span class='line'>313</span> 	 */</span><span class="WHIT">
+<span class='line'>314</span> </span><span class="WHIT">    </span><span class="NAME">this.abort</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">abortDemo</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>315</span> </span><span class="WHIT">	</span><span class="COMM">/**
+<span class='line'>316</span> 	 * Add a screen to a demo. This requires creation of a {@link SeniorDads.Demos.Demo.DemoPart}.
+<span class='line'>317</span> 	 * @example
+<span class='line'>318</span> 	 *  // Example stub for a simple one screen demo.
+<span class='line'>319</span> 	 *  
+<span class='line'>320</span> 	 *  // Create the demo.
+<span class='line'>321</span> 	 *  var myDemo = new SeniorDads.Demos.Demo(preLoader, loader, init, abort);
+<span class='line'>322</span> 	 *  // Add a screen to it.
+<span class='line'>323</span> 	 *  myDemo.add( new SeniorDads.Demos.Demo.DemoPart( part1init, part1Start, part1abort );
+<span class='line'>324</span> 	 *  // Load and start the demo.
+<span class='line'>325</span> 	 *  myDemo.loadAndStart();
+<span class='line'>326</span> 	 *  
+<span class='line'>327</span> 	 *  // [...]
+<span class='line'>328</span> 	 *  
+<span class='line'>329</span> 	 *  // PRELOADER:
+<span class='line'>330</span> 	 *  // This is run first by the demo object, with a callback to the 
+<span class='line'>331</span> 	 *  // loader function in the parameter "preLoaderDone".
+<span class='line'>332</span> 	 *  function preLoader( preLoaderDone ) {
+<span class='line'>333</span> 	 *  	// [... Pre loading code ...]
+<span class='line'>334</span> 	 *  	preLoaderDone();	// &lt;- This will call the function "loader" below.
+<span class='line'>335</span> 	 *  }
+<span class='line'>336</span> 	 *  
+<span class='line'>337</span> 	 *  // LOADER:
+<span class='line'>338</span> 	 *  // This is run second as a result of the preloader callback. It contains
+<span class='line'>339</span> 	 *  // a callback to the initalise and start function in the parameter "loaderDone".
+<span class='line'>340</span> 	 *  function loader( loaderDone ) {
+<span class='line'>341</span> 	 *  	// [... Loading code ...]
+<span class='line'>342</span> 	 *  	loaderDone() 	// &lt;- This will call the initialise and start functions in the object.
+<span class='line'>343</span> 	 *  }
+<span class='line'>344</span> 	 *  
+<span class='line'>345</span> 	 *  // INITIALISE:
+<span class='line'>346</span> 	 *  // This is run third by the demo object's initialise and start functions.
+<span class='line'>347</span> 	 *  //
+<span class='line'>348</span> 	 *  // After this is run, the first demo screen is run (ie function 'part1Start'.)
+<span class='line'>349</span> 	 *  function init() {
+<span class='line'>350</span> 	 *  	// [... Initalisation code ...]
+<span class='line'>351</span> 	 *  }
+<span class='line'>352</span> 	 *  
+<span class='line'>353</span> 	 *  // ABORT:
+<span class='line'>354</span> 	 *  // This is called if "myDemo.abort();" is used.
+<span class='line'>355</span> 	 *  function abort() {
+<span class='line'>356</span> 	 *  	// [... Demo abort code ...]
+<span class='line'>357</span> 	 *  }
+<span class='line'>358</span> 	 *  
+<span class='line'>359</span> 	 *  // DEMO SCREEN INITIALISE:
+<span class='line'>360</span> 	 *  // This is run when the demo screen is first added to the demo. 
+<span class='line'>361</span> 	 *  // (ie before the start of the demo, and as a result of the command 
+<span class='line'>362</span> 	 *  // "myDemo.add( ... )".)
+<span class='line'>363</span> 	 *  function part1init() {
+<span class='line'>364</span> 	 *  	// [... Screen initialisation code ...]
+<span class='line'>365</span> 	 *  }
+<span class='line'>366</span> 	 *  
+<span class='line'>367</span> 	 *  // DEMO SCREEN RUN:
+<span class='line'>368</span> 	 *  // This is run when the demo object runs the first screen.
+<span class='line'>369</span> 	 *  function part1Start() {
+<span class='line'>370</span> 	 *  	// [... Screen main code ...]
+<span class='line'>371</span> 	 *  }
+<span class='line'>372</span> 	 *  
+<span class='line'>373</span> 	 *  // DEMO SCREEN ABORT:
+<span class='line'>374</span> 	 *  // This is called if "myDemo.abort();" is used.
+<span class='line'>375</span> 	 *  function part1abort() {
+<span class='line'>376</span> 	 *  	// [... Screen abort code ...]
+<span class='line'>377</span> 	 *  }
+<span class='line'>378</span> 	 * @function
+<span class='line'>379</span> 	 * @param {SeniorDads.Demos.Demo.DemoPart} currentDemo Demo screen.
+<span class='line'>380</span> 	 */</span><span class="WHIT">
+<span class='line'>381</span> </span><span class="WHIT">    </span><span class="NAME">this.add</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">addDemoPart</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>382</span> </span><span class="WHIT">	</span><span class="COMM">/**
+<span class='line'>383</span> 	 * Start demo.
+<span class='line'>384</span> 	 * @function
+<span class='line'>385</span> 	 */</span><span class="WHIT">
+<span class='line'>386</span> </span><span class="WHIT">    </span><span class="NAME">this.start</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">start</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>387</span> </span><span class="WHIT">	</span><span class="COMM">/**
+<span class='line'>388</span> 	 * Go to next demo screen.
+<span class='line'>389</span> 	 * @function
+<span class='line'>390</span> 	 */</span><span class="WHIT">
+<span class='line'>391</span> </span><span class="WHIT">    </span><span class="NAME">this.next</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">nextDemoPart</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>392</span> </span><span class="WHIT">	</span><span class="COMM">/**
+<span class='line'>393</span> 	 * Load, initialise and start demo. This will call, in the following order:
+<span class='line'>394</span> 	 * &lt;ul>
+<span class='line'>395</span> 	 * &lt;li>the preloader,&lt;/li>
+<span class='line'>396</span> 	 * &lt;li>the loader,&lt;/li>
+<span class='line'>397</span> 	 * &lt;li>the initialisation,&lt;/li>
+<span class='line'>398</span> 	 * &lt;li>and finally, the demo, from the first screen onwards.&lt;/li>
+<span class='line'>399</span> 	 * @function
+<span class='line'>400</span> 	 */</span><span class="WHIT">
+<span class='line'>401</span> </span><span class="WHIT">    </span><span class="NAME">this.loadAndStart</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">loadAndStart</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>402</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'>403</span> </span><span class="WHIT">    </span><span class="COMM">/*
+<span class='line'>404</span>      * Add demo part.
+<span class='line'>405</span>      * 
+<span class='line'>406</span>      * This pushes the demo screen in "currentDemo" onto the array of SeniorDads.Demos.Demo.DemoPart
+<span class='line'>407</span>      */</span><span class="WHIT">
+<span class='line'>408</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">addDemoPart</span><span class="PUNC">(</span><span class="NAME">currentDemo</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>409</span> </span><span class="WHIT">    	</span><span class="NAME">demoPartList.push</span><span class="PUNC">(</span><span class="NAME">currentDemo</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>410</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>411</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'>412</span> </span><span class="WHIT">    </span><span class="COMM">/*
+<span class='line'>413</span>      * Add demo parts. (Experimental.)
+<span class='line'>414</span>      * 
+<span class='line'>415</span>      * This accepts an array of SeniorDads.Demos.Demo.DemoPart in "currentDemo" into the demo screen array.
+<span class='line'>416</span>      */</span><span class="WHIT">
+<span class='line'>417</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">addDemoParts</span><span class="PUNC">(</span><span class="NAME">newDemoList</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>418</span> </span><span class="WHIT">    	</span><span class="NAME">demoPartList</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">newDemoList.clone</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>419</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>420</span> 
+<span class='line'>421</span> </span><span class="WHIT">    </span><span class="COMM">/*
+<span class='line'>422</span>      * Load demo, initialise and start. 
+<span class='line'>423</span>      * 
+<span class='line'>424</span>      * This results in the following being called in order:
+<span class='line'>425</span>      * # preLoader (if it exists)
+<span class='line'>426</span>      * # loader (if it exists)
+<span class='line'>427</span>      * # init (if it exists)
+<span class='line'>428</span>      * # start (if it exists)
+<span class='line'>429</span>      */</span><span class="WHIT">
+<span class='line'>430</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">loadAndStart</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'>431</span> </span><span class="WHIT">    	</span><span class="NAME">preLoad</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="NAME">load</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">initAndStart</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'>432</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>433</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'>434</span> </span><span class="WHIT">    </span><span class="COMM">/*
+<span class='line'>435</span>      * Run demo preloader, and then run the callback in "preLoaderDone" when finished.
+<span class='line'>436</span>      */</span><span class="WHIT">
+<span class='line'>437</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">preLoad</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">preLoaderDone</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>438</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">preLoaderDone</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">preLoaderDone</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">	</span><span class="COMM">// "preLoaderDone" is optional.</span><span class="WHIT">
+<span class='line'>439</span> </span><span class="WHIT">    	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">preLoader</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT">  		</span><span class="COMM">// Only run if we have an preloader function</span><span class="WHIT">
+<span class='line'>440</span> </span><span class="WHIT">    		</span><span class="NAME">preLoader</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">preLoaderDone</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>441</span> </span><span class="WHIT">    	</span><span class="KEYW">else</span><span class="WHIT">  							</span><span class="COMM">// If there's no preloader, try running the callback</span><span class="WHIT">
+<span class='line'>442</span> </span><span class="WHIT">    		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">preLoaderDone</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>443</span> </span><span class="WHIT">    			</span><span class="NAME">preLoaderDone</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>444</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>445</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'>446</span> </span><span class="WHIT">    </span><span class="COMM">/*
+<span class='line'>447</span>      * Run demo loader, and then run the callback in "loaderDone" when finished.
+<span class='line'>448</span>      */</span><span class="WHIT">
+<span class='line'>449</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">load</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">loaderDone</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>450</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">loaderDone</span><span class="WHIT"> </span><span class="PUNC">===</span><span class="WHIT"> </span><span class="NAME">undefined</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="NAME">loaderDone</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">	</span><span class="COMM">// "loaderDone" is optional.</span><span class="WHIT">
+<span class='line'>451</span> </span><span class="WHIT">    	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">loader</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT">  			</span><span class="COMM">// Only run if we have an loader function</span><span class="WHIT">
+<span class='line'>452</span> </span><span class="WHIT">    		</span><span class="NAME">loader</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">loaderDone</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>453</span> </span><span class="WHIT">    	</span><span class="KEYW">else</span><span class="WHIT">  							</span><span class="COMM">// If there's no loader, try running the callback</span><span class="WHIT">
+<span class='line'>454</span> </span><span class="WHIT">    		</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">loaderDone</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>455</span> </span><span class="WHIT">    			</span><span class="NAME">loaderDone</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>456</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>457</span> 
+<span class='line'>458</span> </span><span class="WHIT">    </span><span class="COMM">/*
+<span class='line'>459</span>      * Initialise and start demo. 
+<span class='line'>460</span>      * 
+<span class='line'>461</span>      * This results in the following being called in order:
+<span class='line'>462</span>      * # init (if it exists)
+<span class='line'>463</span>      * # start (if it exists)
+<span class='line'>464</span>      */</span><span class="WHIT">
+<span class='line'>465</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">initAndStart</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>466</span> </span><span class="WHIT">    	</span><span class="NAME">initialise</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'>467</span> </span><span class="WHIT">		</span><span class="NAME">start</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>468</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>469</span> 
+<span class='line'>470</span> </span><span class="WHIT">    </span><span class="COMM">/*
+<span class='line'>471</span>      * Initialise demo without starting. 
+<span class='line'>472</span>      */</span><span class="WHIT">
+<span class='line'>473</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">initialise</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>474</span> </span><span class="WHIT">    	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">init</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT">		</span><span class="COMM">// Only run if we have an initialise function</span><span class="WHIT">
+<span class='line'>475</span> </span><span class="WHIT">    		</span><span class="NAME">init</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'>476</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>477</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'>478</span> </span><span class="WHIT">    </span><span class="COMM">/*
+<span class='line'>479</span>      * Start demo.
+<span class='line'>480</span>      * 
+<span class='line'>481</span>      * This resets the demo array position to the start, and pops off the 
+<span class='line'>482</span>      * next demo screen. (ie the first one.)
+<span class='line'>483</span>      */</span><span class="WHIT">
+<span class='line'>484</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">start</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>485</span> </span><span class="WHIT">    	</span><span class="NAME">currentDemoPartCounter</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">			</span><span class="COMM">// Start of demo</span><span class="WHIT">
+<span class='line'>486</span> </span><span class="WHIT">    	</span><span class="NAME">nextDemoPart</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">						</span><span class="COMM">// Start first demo screen</span><span class="WHIT">
+<span class='line'>487</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>488</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'>489</span> </span><span class="WHIT">    </span><span class="COMM">/*
+<span class='line'>490</span>      * Get next demo screen.
+<span class='line'>491</span>      * 
+<span class='line'>492</span>      * This pops off the next screen in the array. If we're out of screens,
+<span class='line'>493</span>      * it evokes the demo abort.
+<span class='line'>494</span>      */</span><span class="WHIT">
+<span class='line'>495</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">nextDemoPart</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>496</span> </span><span class="WHIT">    	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">currentDemoPartCounter</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">demoPartList.length</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">			</span><span class="COMM">// If We've still got screens,...</span><span class="WHIT">
+<span class='line'>497</span> </span><span class="WHIT">	    	</span><span class="NAME">currentDemoPart</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">demoPartList</span><span class="PUNC">[</span><span class="NAME">currentDemoPartCounter</span><span class="PUNC">++</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">	</span><span class="COMM">// ... get the next screen,...</span><span class="WHIT">
+<span class='line'>498</span> </span><span class="WHIT">	    	</span><span class="NAME">currentDemoPart.start</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">									</span><span class="COMM">// ... and start it.</span><span class="WHIT">
+<span class='line'>499</span> </span><span class="WHIT">    	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>500</span> </span><span class="WHIT">    	</span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>501</span> </span><span class="WHIT">    		</span><span class="NAME">abortDemo</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>502</span> </span><span class="WHIT">    	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>503</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>504</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'>505</span> </span><span class="WHIT">    </span><span class="COMM">/*
+<span class='line'>506</span>      * Abort demo.
+<span class='line'>507</span>      * 
+<span class='line'>508</span>      * If we're got any screens currently running, abort that as well.
+<span class='line'>509</span>      */</span><span class="WHIT">
+<span class='line'>510</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">abortDemo</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>511</span> </span><span class="WHIT">    	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">currentDemoPart</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT">			</span><span class="COMM">// If we're got any screens currently running...</span><span class="WHIT">
+<span class='line'>512</span> </span><span class="WHIT">    		</span><span class="NAME">currentDemoPart.abort</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">			</span><span class="COMM">// .. abort that as first.</span><span class="WHIT">
+<span class='line'>513</span> </span><span class="WHIT">    	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">abort</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT">						</span><span class="COMM">// Only run if we have an abort function</span><span class="WHIT">
+<span class='line'>514</span> </span><span class="WHIT">    		</span><span class="NAME">abort</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>515</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>516</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'>517</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>518</span>     * &lt;h1>SeniorDads.Demos.Demo.DemoPart&lt;/h1>
+<span class='line'>519</span>     * &lt;p>&lt;strong>Senior Dads demo screen.&lt;/strong>&lt;/p>
+<span class='line'>520</span>     * &lt;p>&lt;em>var myDemoPart = new SeniorDads.Demos.Demo.DemoPart(init, start, abort);&lt;/em>&lt;/p>
+<span class='line'>521</span>     * @constructor 
+<span class='line'>522</span>     * @class Senior Dads demo screen.
+<span class='line'>523</span> 	* @param {function} init Function to call before starting.
+<span class='line'>524</span> 	* @param {function} start Function to call to start screen.
+<span class='line'>525</span> 	* @param {function} abort Function to call if the screen needs to make a speedy exit.
+<span class='line'>526</span>     */</span><span class="WHIT">
+<span class='line'>527</span> </span><span class="WHIT">    </span><span class="NAME">SeniorDads.Demos.Demo.DemoPart</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">init</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">start</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">abort</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>528</span> </span><span class="WHIT">    	</span><span class="COMM">/**
+<span class='line'>529</span>     	 * Call function before starting.
+<span class='line'>530</span>     	 * @function
+<span class='line'>531</span>     	 */</span><span class="WHIT">
+<span class='line'>532</span> </span><span class="WHIT">        </span><span class="NAME">this.init</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'>533</span> </span><span class="WHIT">        	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">init</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT">				</span><span class="COMM">// Only call if we have a function.</span><span class="WHIT">
+<span class='line'>534</span> </span><span class="WHIT">        		</span><span class="NAME">init</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'>535</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>536</span> </span><span class="WHIT">    	</span><span class="COMM">/**
+<span class='line'>537</span>     	 * Call function to start screen.
+<span class='line'>538</span>     	 * @function
+<span class='line'>539</span>     	 */</span><span class="WHIT">
+<span class='line'>540</span> </span><span class="WHIT">        </span><span class="NAME">this.start</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'>541</span> </span><span class="WHIT">        	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">start</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT">				</span><span class="COMM">// Only call if we have a function.</span><span class="WHIT">
+<span class='line'>542</span> </span><span class="WHIT">        		</span><span class="NAME">start</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'>543</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>544</span> </span><span class="WHIT">    	</span><span class="COMM">/**
+<span class='line'>545</span>     	 * Call function if the screen needs to make a speedy exit.
+<span class='line'>546</span>     	 * @function
+<span class='line'>547</span>     	 */</span><span class="WHIT">
+<span class='line'>548</span> </span><span class="WHIT">        </span><span class="NAME">this.abort</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'>549</span> </span><span class="WHIT">        	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">abort</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">)</span><span class="WHIT">				</span><span class="COMM">// Only call if we have a function.</span><span class="WHIT">
+<span class='line'>550</span> </span><span class="WHIT">        		</span><span class="NAME">abort</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="WHIT">
+<span class='line'>551</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>552</span> </span><span class="WHIT">        </span><span class="WHIT">
+<span class='line'>553</span> </span><span class="WHIT">        </span><span class="NAME">this.init</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>554</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>555</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>556</span> </span></pre></body></html>

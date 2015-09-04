@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <title>Testmus! by The Senior Dads</title>
+        <script language="javascript" type="text/javascript" src="../common/SeniorDads.js"></script>
+        <script language="javascript" type="text/javascript" src="../common/Loader.js"></script>
+        <script language="javascript" type="text/javascript" src="../common/Image.js"></script>
+        <script language="javascript" type="text/javascript" src="../common/ScreenHandler.js"></script>
+        <script language="javascript" type="text/javascript" src="../common/Blob.js"></script>
+        <script language="javascript" type="text/javascript" src="../common/SoundBox.js"></script>
+        <script language="javascript" type="text/javascript" src="resources/DameVL_SDFanfare.js"></script>
+        <script language="javascript" type="text/javascript" src="resources/DameVL_GMF.js"></script>
+        <script language="javascript" type="text/javascript" src="resources/DameVL_Samba.js"></script>
+        <script language="javascript" type="text/javascript" src="main.js"></script>
+        <script language="javascript" type="text/javascript">
+            function runDemo() {
+                var demo = new SeniorDads.Demos.Test(document.getElementById('demo'), 'democanvas'); 
+                demo.LoadAndStart();
+            }
+        </script>
+        <style>
+            body { background-color: #000000; color: #FFFFFF; }
+            .demoCover { width: 100%; }
+            #demo { margin-left: auto; margin-right: auto; width: 640px; }
+            canvas { border: 1px solid #888888; }
+        </style>
+    </head>
+    <body onload="runDemo();">
+    	<div id="progressIndicatorPlaceholder">LOADING</div>
+        <div class="demoCover">
+            <div id="demo"></div>
+        </div>
+		<p><a href="#" target="_blank" id="download">Open in a new window</a> as a downloadable PNG file.</p>
+    </body>
+</html>
