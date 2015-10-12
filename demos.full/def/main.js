@@ -15,7 +15,7 @@ SeniorDads.CreateNameSpace("SeniorDads.Demos");
  * @constructor 
  * @class Senior Dads 'Def Demo
  * @example
- * 	<html><head><script language="javascript">
+ * 	&lt;html&gt;&lt;head&gt;&lt;script language="javascript"&gt;
  *  // Simple example, which just loads and starts the demo.
  *  var demo;
  * 
@@ -27,9 +27,9 @@ SeniorDads.CreateNameSpace("SeniorDads.Demos");
  *  function finished() {
  *  	alert('Demo is finished!');
  *  }
- *  </script></head>
- *  <body onload="startDemo();"><div id="demo"></div></body>
- *  </html>
+ *  &lt;/script&gt;&lt;/head&gt;
+ *  &lt;body onload="startDemo();"&gt;&lt;div id="demo"&gt;&lt;/div&gt;&lt;/body&gt;
+ *  &lt;/html&gt;
  */
 SeniorDads.Demos.DefDemo = function(placeholder, name, callbackOnEnd) {
     this.blah = "y333Ah!!! w3:R3 bAcK!!!!!1!!1! tH3 m3GaM1gHt33 *s3N10r dAdZ* rUl3c!!!!! IN CODEF!!!!!!";
@@ -1766,6 +1766,7 @@ SeniorDads.Demos.DefDemo = function(placeholder, name, callbackOnEnd) {
     	// The reason we're re-using the "burpy" coppers layer for displaying the credits is that it's the lowest layer 
     	// in the layer stack above the backdrop layer. (And it also allows us to do the fade on the other layers above it.)
     	function draw_scroller() {
+    		copperScreen.show();
     		copperScreen.clear();				
     		// Draw from the credits panel, using the scroll position, and with a wobble applied to it.
     		creditsScreenText.drawPart(copperScreen, 0, 0, creditsWobbler.h(), currentScrollPos + creditsWobbler.v(), 640, 400 );

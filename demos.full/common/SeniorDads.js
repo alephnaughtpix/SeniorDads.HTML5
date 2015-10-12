@@ -596,15 +596,15 @@ SeniorDads.Demos.Demo = function(preLoader, loader, init, abort, onEnd) {
  * @param {int} [width] Width of the player.
  * @param {int} [height] Height of the player.
  * @example
- * 	<html><head><script language="javascript">
+ * 	&lt;html&gt;&lt;head&gt;&lt;script language="javascript"&gt;
  *  // Load the 'Def Demo into the player. (See {@link SeniorDads.Demos.DefDemo})
  *  var player; 
  *  function startPlayer() { 
  *  	player = new SeniorDads.Demos.Player(document.getElementById('demo'), 'democanvas', SeniorDads.Demos.DefDemo);
  *  }
- *  </script></head>
- *  <body onload="startPlayer();"><div id="demo"></div></body>
- *  </html>
+ *  &lt;/script&gt;&lt;/head&gt;
+ *  &lt;body onload="startPlayer();"&gt;&lt;div id="demo"&gt;&lt;/div&gt;&lt;/body&gt;
+ *  &lt;/html&gt;
  */
 SeniorDads.Demos.Player = function(container, name, demoClass, width, height) {
 	var button;				// Button element
