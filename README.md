@@ -1,10 +1,10 @@
-#Seniordads in HTML5
+# Seniordads in HTML5
 
-##The Senior Dads demos in HTML5 and Javascript.
+## The Senior Dads demos in HTML5 and Javascript.
 
-###Current version: v0.5 (2015-09-04)
+### Current version: v0.5 (2015-09-04)
 
-##Updates
+## Updates
 
 ###v0.5 (2015-08-07)
 * "The 'Def Demo" now complete and released, with comments.
@@ -51,11 +51,11 @@ on the Javascript/HTML5 platform.
 * "Colonic Irrigation".
 * "DadPlazz!".
 
-##New Demos created so far
+## New Demos created so far
 * "The 'Def Demo"
 * Test music demo (for future demo)
 
-##Demos still to do
+## Demos still to do
 
 * "L'Aube Du Matin Du Soir 2" remix
 * Air Dirt
@@ -65,7 +65,7 @@ on the Javascript/HTML5 platform.
 * Monomental
 * The Ultimate Fake Demo
 
-##Possible unreleased material to do
+## Possible unreleased material to do
 * Demestos! aka "DEMOSTOS" (Text-only space invaders game) 
 
 ---
