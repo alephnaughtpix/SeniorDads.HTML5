@@ -6,14 +6,14 @@
 
 ## Updates
 
-###v0.5 (2015-08-07)
+### v0.5 (2015-08-07)
 * "The 'Def Demo" now complete and released, with comments.
 * YouTube style Senior Dads Demo Player.
 * Codef screen handling added to Screenhandler.js .
 * JSDoc commenting for Font.js, Image.js, and some of ScreenHandler.js
 * Updates to ScreenHandler, Loader and various code improvements.
 
-###v0.4 (2015-08-07)
+### v0.4 (2015-08-07)
 * Entirely new demo "The 'Def Demo" 50% complete.
 * New test demo of JS-based SoundBox music (For possible sequel to "The 'Def Demo".) added.
 * Changes to loader code. (This required changes to the other resource code and the existing demos.)
@@ -21,10 +21,10 @@
 * 3rd party additions to codebase: Atariscreen (Required for future demos.) and Codef (Required for "The 'Def Demo".), SoundBox and Blob.
 * Adding JSDoc commenting. SeniorDads.js and Loader.js already done.
 
-###v0.3 (2014-04-17)
+### v0.3 (2014-04-17)
 * "DadPlazz!" 99% complete.
 
-###v0.2 (2014-04-08)
+### v0.2 (2014-04-08)
 
 * "Anal Tuck" completed.
 * "Colonic Irrigation" 99% complete.
@@ -32,7 +32,7 @@
 
 ---
 
-##Introduction
+## Introduction
 
 This project aims to recreate the The Senior Dads demos from Atari 16/24 bit computers as faithfully 
 as possible in HTML5 and Javascript, as well as implement new HTML5 demos by the crew.
@@ -45,7 +45,7 @@ to properly emulate their demos!
 As well as being fun, I'm using this project as a proof of concept in order to learn how best to do demos 
 on the Javascript/HTML5 platform.
 
-##Demos recreated so far
+## Demos recreated so far
 
 * "Anal Tuck".
 * "Colonic Irrigation".
@@ -70,13 +70,13 @@ on the Javascript/HTML5 platform.
 
 ---
 
-##Running demos
+## Running demos
 
 Due to Javascript security issues, the demos must be run from a web server in order to load all the resources
 (eg pictures, binary files) for each demo. Assuming you have set one up, and installed the files on your webserver
 you can run the demos by pointing your browser at `http://[webserver root]/Seniordads.html5/demos/`.
 
-##Folders
+## Folders
 * `demos` - minified version of the demos.
 * `demos.full` - full versions of the demos.
 * `docs` - JSDocs for code. (Incomplete.)
@@ -89,7 +89,7 @@ you can run the demos by pointing your browser at `http://[webserver root]/Senio
 * `test` - Test Javascript music demo.
 * `common` - Common code used by the demos. (See "Technology" below.)
 
-##Technology
+## Technology
 
 In order to faithfully recreate these Atari screens, common libraries have been set up, and are currently being worked on
 in order to emulate the Atari systems these demos originally ran on, and to simplify the creation of what were often quite
@@ -104,7 +104,7 @@ These libraries are stored in the `common` folder, and include:
 * `Music.js` - Music player- wrapper for CODEF music player. (See "Other code used" below.)
 * `SoudBox.js` - Music player- wrapper for SoundBox music player. (See "Other code used" below.)
 
-##Other code used
+## Other code used
 
 Where possible, all code is original. However, due to the complexity of emulating some of the Atari system (In
 particular the sound and module playing), other code has been used. As before, this code is stored in the `common` folder.
